@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "News Date",
+    "description": ""
+  },
+  "extDescription": {
+    "message": "Show the publish date on News site.",
+    "description": ""
+  }
+}

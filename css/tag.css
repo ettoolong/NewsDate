@@ -1,0 +1,47 @@
+
+.cr {
+  font-family: "Arial, sans-serif" !important;
+  font-size: 16px !important;
+  font-weight: 100 !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  letter-spacing: normal !important;
+  width: 200px !important;
+  margin: 0px !important;
+  padding: 4px !important;
+  position: fixed !important;
+  text-align: center !important;
+  color: #f0f0f0 !important;
+  border: 1px solid #FFF !important;
+  z-index: 99999999 !important;
+}
+
+.cr-top {
+  top: -30px;
+}
+
+.cr-right {
+  right: -94px;
+}
+
+.cr-top.cr-right {
+  transform-origin: left top;
+  transform: rotate(45deg);
+}
+
+/* Colors */
+
+.cr-white     { background-color: #f0f0f0; color: #444; }
+.cr-black     { background-color: #333; }
+.cr-grey      { background-color: #999; }
+.cr-blue      { background-color: #39d; }
+.cr-green     { background-color: #2c7; }
+.cr-turquoise { background-color: #1b9; }
+.cr-purple    { background-color: #95b; }
+.cr-red       { background-color: #e43; }
+.cr-orange    { background-color: #e82; }
+.cr-yellow    { background-color: #ec0; }
+
+/*
+<div class="cr cr-top cr-right cr-sticky cr-blue">Hello</div>
+*/
