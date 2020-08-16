@@ -1,0 +1,72 @@
+div.col {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+}
+
+div.row {
+  width: 100%;
+  min-width: 400px;
+  display: flex;
+  flex-direction: row;
+}
+
+.itemDiv {
+  display: block;
+  margin-top:16px;
+}
+
+.excludeSites {
+  height: 100px;
+}
+
+.grow {
+  flex-grow: 2;
+}
+
+.button {
+  margin-left: 8px;
+}
+
+.list {
+  border: 1px solid #888;
+  background-color: #fff;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  margin-bottom: 8px;
+}
+
+.listItem {
+  padding: 2px 4px;
+  display: flex;
+  flex-direction: row;
+}
+
+.removeButton {
+  pointer-events: none;
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  background-color: #777;
+  color: #fff;
+  padding-left: 4px;
+  border-radius: 50%;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.listItem:hover .removeButton {
+  opacity: 1;
+  pointer-events: unset;
+}
+
+.itemLabel {
+  display: inline-block;
+  width: 60px;
+}
+
+.hide {
+  display: none;
+}

@@ -6,5 +6,21 @@
   "extDescription": {
     "message": "在新聞網站上顯示新聞日期",
     "description": ""
+  },
+  "optionPageTitle": {
+    "message": "News Date 偏好設定:",
+    "description": ""
+  },
+  "excludeSites": {
+    "message": "排除網站:",
+    "description": ""
+  },
+  "placeholder": {
+    "message": "例如: https://www.youtube.com/*",
+    "description": ""
+  },
+  "add": {
+    "message": "新增",
+    "description": ""
   }
 }

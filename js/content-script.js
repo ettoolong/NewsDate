@@ -1,3 +1,5 @@
+let currentPrefs = {};
+
 const hostnameMapping = {
   'hk.appledaily.com': /^https:\/\/hk\.appledaily\.com\/.+\/(\d{8})\/.+/g,
   'technews.tw': /^https:\/\/technews\.tw\/(\d{4}\/\d{2}\/\d{2})\/.+/g,
@@ -14,17 +16,23 @@ const metaTagSelectors = [
   'meta[property="og:article:published_time"][content]',
   'meta[property=lastPublishedDate][content]',
   'meta[itemprop=datePublished][content]',
+  'meta[name="iso-8601-publish-date"][content]',
+  'meta[property="aja:published_data"][content]',
   'meta[name=pdate][content]',
   'meta[name="dcterms.created"][content]',
   'meta[name="date.available"][content]',
-  'meta[name=date][content]'
+  'meta[name=date][content]',
+  'meta[name="cXenseParse:recs:publishtime"][content]',
+  'meta[name=firstcreate][content]',
+  'meta[name="blaize:publicationDate"][content]'
 ]
 
 const timeTagSelectors = [
   'time[itemprop=datePublished][datetime]',
   'time[itemprop=datePublished][date]',
   'time[datetime]',
-  'time[date]'
+  'time[date]',
+  'time.articleDetail-header__date'
 ]
 
 const monthMapping = {
@@ -41,6 +49,7 @@ const monthMapping = {
   'nov': '11',
   'dec': '12',
 }
+const dateRegex = /^(\d{4}\/\d{1,2}\/\d{1,2}).*/g
 const localDateRegex = /^[A-Za-z]{3} ([A-Za-z]{3} \d{2} \d{4}) \d{2}:\d{2}:\d{2}.+/i
 
 function convertFromLocalDate(dateStr) {
@@ -92,6 +101,8 @@ function dateStrToDate(dateStr) {
   try {
     if (dateStr.includes('/')) {
       if (dateStr.indexOf('/') === 4) { // YYYY/MM/DD
+        const m = dateRegex.exec(dateStr)
+        if (m.length === 2) dateStr = m[1]
         dateStr = dateStr.replace(/\//g, '-')
       } if (dateStr.indexOf('/') === 2) { // DD/MM/YYYY
         dateStr = moment(dateStr, 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -148,6 +159,8 @@ function getDate() {
   if (dateNode) {
     dateStr = dateNode.getAttribute('datetime')
     if (!dateStr) dateStr = dateNode.getAttribute('date')
+    if (!dateStr) dateStr = dateNode.textContent.trim()
+    console.log(dateStr)
     if (dateStr) return dateStrToDate(dateStr)
   }
 
@@ -173,15 +186,45 @@ function getDate() {
   return '';
 }
 
-const date = getDate()
-if (date) {
-  const div = document.createElement('div')
-  div.classList.add('cr', 'cr-top', 'cr-right', gitColor(date))
-  div.style.fontFamily = 'Arial !important'
-  div.textContent = date
-  document.body.appendChild(div)
-  div.addEventListener('click', () => {
-    document.body.removeChild(div)
-  }, {once: true})
+const urlFilter = url => {
+  if (currentPrefs.excludeSites) {
+    for (let filter of currentPrefs.excludeSites) {
+      if (filter.includes('*')) {
+        let p = filter.replace(/(\W)/ig, '\\$1').replace(/\\\*/ig, '*').replace(/\*/ig, '.*');
+        let re = new RegExp('^' + p + '$', 'ig');
+        if (url.match(re) !== null) {
+          return true;
+        }
+      } else if (url === filter) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const init = preferences => {
+  currentPrefs = preferences;
+  if (urlFilter(document.location.toString())) return
+  const date = getDate()
+  if (date) {
+    const div = document.createElement('div')
+    div.classList.add('cr', 'cr-top', 'cr-right', gitColor(date))
+    div.style.fontFamily = 'Arial !important'
+    div.textContent = date
+    document.body.appendChild(div)
+    div.addEventListener('click', () => {
+      document.body.removeChild(div)
+    }, {once: true})
+  }
+  // console.log(date)
 }
-// console.log(date)
+
+chrome.storage.local.get(results => {
+  if ((typeof results.length === 'number') && (results.length > 0)) {
+    results = results[0];
+  }
+  if (results.version) {
+    init(results);
+  }
+});

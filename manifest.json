@@ -22,8 +22,16 @@
       "run_at": "document_end"
     }
   ],
+  "background": {
+    "scripts": ["js/background.js"]
+  },
   "permissions": [
     "storage"
   ],
-  "default_locale": "en"
+  "default_locale": "en",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false,
+    "browser_style": true
+  }
 }

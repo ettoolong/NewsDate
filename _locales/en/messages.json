@@ -6,5 +6,21 @@
   "extDescription": {
     "message": "Show the publish date on News site.",
     "description": ""
+  },
+  "optionPageTitle": {
+    "message": "News Date preferences:",
+    "description": ""
+  },
+  "excludeSites": {
+    "message": "Exclude sites:",
+    "description": ""
+  },
+  "placeholder": {
+    "message": "Example: https://www.youtube.com/*",
+    "description": ""
+  },
+  "add": {
+    "message": "Add",
+    "description": ""
   }
 }
