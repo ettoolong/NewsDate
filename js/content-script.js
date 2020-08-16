@@ -6,6 +6,27 @@ const hostnameMapping = {
   'www.washingtonpost.com': /^https:\/\/www\.washingtonpost\.com\/.+\/(\d{4}\/\d{2}\/\d{2})\/.+/g,
 }
 
+const metaTagSelectors = [
+  'meta[name=pubdate][property="article:published_time"][content]',
+  'meta[name=pubdate][content]',
+  'meta[property=pubdate][content]',
+  'meta[property="article:published_time"][content]',
+  'meta[property="og:article:published_time"][content]',
+  'meta[property=lastPublishedDate][content]',
+  'meta[itemprop=datePublished][content]',
+  'meta[name=pdate][content]',
+  'meta[name="dcterms.created"][content]',
+  'meta[name="date.available"][content]',
+  'meta[name=date][content]'
+]
+
+const timeTagSelectors = [
+  'time[itemprop=datePublished][datetime]',
+  'time[itemprop=datePublished][date]',
+  'time[datetime]',
+  'time[date]'
+]
+
 const monthMapping = {
   'jan': '01',
   'feb': '02',
@@ -93,75 +114,37 @@ function dateStrToDate(dateStr) {
   }
 }
 
+function getDateNodeFromMetaTag() {
+  for (const selector of metaTagSelectors) {
+    dateNode = document.querySelector(selector)
+    if (dateNode) {
+      return dateNode
+    }
+  }
+}
+
+function getDateNodeFromTimeTag() {
+  for (const selector of timeTagSelectors) {
+    dateNode = document.querySelector(selector)
+    if (dateNode) {
+      return dateNode
+    }
+  }
+}
+
 function getDate() {
   let dateNode, dateStr;
   dateStr = getDateFromUrl()
   if (dateStr) return dateStrToDate(dateStr)
 
-  dateNode = document.querySelector('meta[name=pubdate][property="article:published_time"][content]')
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[name=pubdate][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[property=pubdate][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[property="article:published_time"][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[property="og:article:published_time"][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[property=lastPublishedDate][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[itemprop=datePublished][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[name=pdate][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[name="dcterms.created"][content]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[name="date.available"][content]')
-  }
-  if (!dateNode) {
-    dateNode = document.querySelector('meta[name=date][content]')
-  }
-
+  dateNode = getDateNodeFromMetaTag()
   if (dateNode) {
     dateStr = dateNode.getAttribute('content')
     if (dateStr) return dateStrToDate(dateStr)
   }
 
   // fallback to time tag
-
-  if (!dateNode) {
-    dateNode = document.querySelector('time[itemprop=datePublished][datetime]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('time[itemprop=datePublished][date]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('time[datetime]')
-  }
-
-  if (!dateNode) {
-    dateNode = document.querySelector('time[date]')
-  }
-
+  dateNode = getDateNodeFromTimeTag()
   if (dateNode) {
     dateStr = dateNode.getAttribute('datetime')
     if (!dateStr) dateStr = dateNode.getAttribute('date')
@@ -194,6 +177,7 @@ const date = getDate()
 if (date) {
   const div = document.createElement('div')
   div.classList.add('cr', 'cr-top', 'cr-right', gitColor(date))
+  div.style.fontFamily = 'Arial !important'
   div.textContent = date
   document.body.appendChild(div)
   div.addEventListener('click', () => {
