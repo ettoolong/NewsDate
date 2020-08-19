@@ -1,48 +1,50 @@
 let defaultPreference = {
+  filtering: 0,
   excludeSites: [],
+  allowSites: [],
   version: 1
-};
-let preferences = {};
+}
+let preferences = {}
 
 const storageChangeHandler = (changes, area) => {
-  if(area === 'local') {
-    let changedItems = Object.keys(changes);
+  if (area === 'local') {
+    let changedItems = Object.keys(changes)
     for (let item of changedItems) {
-      preferences[item] = changes[item].newValue;
+      preferences[item] = changes[item].newValue
     }
   }
-};
+}
 
 const loadPreference = () => {
   chrome.storage.local.get(results => {
     if ((typeof results.length === 'number') && (results.length > 0)) {
-      results = results[0];
+      results = results[0]
     }
     if (!results.version) {
-      preferences = defaultPreference;
+      preferences = defaultPreference
       chrome.storage.local.set(defaultPreference, res => {
-        chrome.storage.onChanged.addListener(storageChangeHandler);
-      });
+        chrome.storage.onChanged.addListener(storageChangeHandler)
+      })
     } else {
-      preferences = results;
-      chrome.storage.onChanged.addListener(storageChangeHandler);
+      preferences = results
+      chrome.storage.onChanged.addListener(storageChangeHandler)
     }
     if (preferences.version !== defaultPreference.version) {
-      let update = {};
-      let needUpdate = false;
-      for(let p in defaultPreference) {
-        if(preferences[p] === undefined) {
-          update[p] = defaultPreference[p];
-          needUpdate = true;
+      let update = {}
+      let needUpdate = false
+      for (let p in defaultPreference) {
+        if (preferences[p] === undefined) {
+          update[p] = defaultPreference[p]
+          needUpdate = true
         }
       }
-      if(needUpdate) {
-        chrome.storage.local.set(update);
+      if (needUpdate) {
+        chrome.storage.local.set(update)
       }
     }
-  });
-};
+  })
+}
 
 window.addEventListener('DOMContentLoaded', event => {
-  loadPreference();
-});
+  loadPreference()
+})

@@ -11,8 +11,24 @@
     "message": "News Date 偏好設定:",
     "description": ""
   },
+  "filtering": {
+    "message": "過濾網站",
+    "description": ""
+  },
+  "applyExcludeSites": {
+    "message": "嘗試在所有的網站上偵測日期並排除指定的網站",
+    "description": ""
+  },
+  "applyAllowSites": {
+    "message": "只在允許的網站上偵測日期",
+    "description": ""
+  },
   "excludeSites": {
-    "message": "排除網站:",
+    "message": "排除的網站:",
+    "description": ""
+  },
+  "allowSites": {
+    "message": "允許的網站:",
     "description": ""
   },
   "placeholder": {

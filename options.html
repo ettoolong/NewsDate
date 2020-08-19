@@ -11,17 +11,54 @@
       <div style="display:inline-block;">
         <label data-l10n-id="optionPageTitle">News Date preferences:</label>
         <div class="itemDiv">
-          <div class="row">
-            <span data-l10n-id="excludeSites">Exclude sites:</span>
-            <div class="col">
-              <div class="list hide" type="list" id="excludeSites">
+          <div id="filtering" type="radioGroup">
+            <div class="row">
+              <div class="col">
+                <label data-l10n-id="filtering">Filtering</label>
               </div>
-              <div class="row">
-                <input type="text" class="site grow" placeholder="Example: https://www.youtube.com/*">
-                <button type="button" class="button" data-l10n-id="add">Add</button>
+              <div class="col spacingLeft">
+                <div class="row alignTop">
+                  <input type="radio" id="applyExcludeSites" name="filtering" value="0">
+                  <div class="col spacingLeft">
+                    <label for="applyExcludeSites" data-l10n-id="applyExcludeSites">Detect date on every site and exclude specific websites</label>
+                    <div class="row">
+                      <span data-l10n-id="excludeSites">Exclude sites:</span>
+                      <div class="col spacingLeft">
+                        <div class="list hide" type="list" id="excludeSites">
+                        </div>
+                        <div class="row">
+                          <input type="text" pref="excludeSites" class="site grow" placeholder="Example: https://www.youtube.com/*">
+                          <button type="button" pref="excludeSites" class="button" data-l10n-id="add">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row alignTop spacingTop">
+                  <input type="radio" id="applyAllowSites" name="filtering" value="1">
+                  <div class="col spacingLeft">
+                    <label for="applyAllowSites" data-l10n-id="applyAllowSites">Only detect date on allowed websites</label>
+                    <div class="row">
+                      <span data-l10n-id="allowSites">Allow sites:</span>
+                      <div class="col spacingLeft">
+                        <div class="list hide" type="list" id="allowSites">
+                        </div>
+                        <div class="row">
+                          <input type="text" pref="allowSites" class="site grow" placeholder="Example: https://www.youtube.com/*">
+                          <button type="button" pref="allowSites" class="button" data-l10n-id="add">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="itemDiv">
+        </div>
+        <div class="itemDiv">
         </div>
       </div>
     </div>

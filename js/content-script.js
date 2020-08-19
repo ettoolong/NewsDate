@@ -1,6 +1,7 @@
-let currentPrefs = {};
+let currentPrefs = {}
 
 const hostnameMapping = {
+  'tw.appledaily.com': /^https:\/\/tw\.appledaily\.com\/.+\/(\d{8})\/.+/g,
   'hk.appledaily.com': /^https:\/\/hk\.appledaily\.com\/.+\/(\d{8})\/.+/g,
   'technews.tw': /^https:\/\/technews\.tw\/(\d{4}\/\d{2}\/\d{2})\/.+/g,
   'ccc.technews.tw': /^https:\/\/ccc\.technews\.tw\/(\d{4}\/\d{2}\/\d{2})\/.+/g,
@@ -105,7 +106,7 @@ function dateStrToDate(dateStr) {
         if (m.length === 2) dateStr = m[1]
         dateStr = dateStr.replace(/\//g, '-')
       } if (dateStr.indexOf('/') === 2) { // DD/MM/YYYY
-        dateStr = moment(dateStr, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        dateStr = moment(dateStr, 'DD/MM/YYYY').format('YYYY-MM-DD')
       }
     }
 
@@ -114,7 +115,7 @@ function dateStrToDate(dateStr) {
     } else {
       dateStr = dateStr.substr(0, 8) // YYYYMMDD
     }
-    const res = moment(dateStr).format('YYYY-MM-DD');
+    const res = moment(dateStr).format('YYYY-MM-DD')
     if (res === 'Invalid date') {
       return ''
     } else {
@@ -144,7 +145,8 @@ function getDateNodeFromTimeTag() {
 }
 
 function getDate() {
-  let dateNode, dateStr;
+  let dateNode
+  let dateStr
   dateStr = getDateFromUrl()
   if (dateStr) return dateStrToDate(dateStr)
 
@@ -170,7 +172,7 @@ function getDate() {
   }
   if (dateNode) {
     const dataSeconds = dateNode.getAttribute('data-seconds')
-    dateStr = moment((new Date(dataSeconds * 1000))).format('YYYY-MM-DD');
+    dateStr = moment((new Date(dataSeconds * 1000))).format('YYYY-MM-DD')
     if (dateStr) return dateStrToDate(dateStr)
   }
 
@@ -183,28 +185,44 @@ function getDate() {
     if (dateStr) return dateStrToDate(dateStr)
   }
 
-  return '';
+  return ''
+}
+
+const matching = (filter, url) => {
+  if (filter.includes('*')) {
+    const p = filter.replace(/(\W)/ig, '\\$1').replace(/\\\*/ig, '*').replace(/\*/ig, '.*')
+    const re = new RegExp('^' + p + '$', 'ig')
+    if (url.match(re) !== null) {
+      return true
+    }
+  } else if (url === filter) {
+    return true
+  }
+  return false
 }
 
 const urlFilter = url => {
-  if (currentPrefs.excludeSites) {
-    for (let filter of currentPrefs.excludeSites) {
-      if (filter.includes('*')) {
-        let p = filter.replace(/(\W)/ig, '\\$1').replace(/\\\*/ig, '*').replace(/\*/ig, '.*');
-        let re = new RegExp('^' + p + '$', 'ig');
-        if (url.match(re) !== null) {
-          return true;
-        }
-      } else if (url === filter) {
-        return true;
+  if (currentPrefs.filtering === 0) {
+    //Detect date on every site and exclude specific websites
+    if (currentPrefs.excludeSites) {
+      for (let filter of currentPrefs.excludeSites) {
+        if (matching(filter, url)) return true
       }
     }
+    return false
+  } else {
+    //Only detect date on allowed websites
+    if (currentPrefs.allowSites) {
+      for (let filter of currentPrefs.allowSites) {
+        if (matching(filter, url)) return false
+      }
+    }
+    return true
   }
-  return false;
-};
+}
 
 const init = preferences => {
-  currentPrefs = preferences;
+  currentPrefs = preferences
   if (urlFilter(document.location.toString())) return
   const date = getDate()
   if (date) {
@@ -222,9 +240,9 @@ const init = preferences => {
 
 chrome.storage.local.get(results => {
   if ((typeof results.length === 'number') && (results.length > 0)) {
-    results = results[0];
+    results = results[0]
   }
   if (results.version) {
-    init(results);
+    init(results)
   }
-});
+})

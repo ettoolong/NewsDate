@@ -11,8 +11,24 @@
     "message": "News Date preferences:",
     "description": ""
   },
+  "filtering": {
+    "message": "Filtering",
+    "description": ""
+  },
+  "applyExcludeSites": {
+    "message": "Detect date on every site and exclude specific websites",
+    "description": ""
+  },
+  "applyAllowSites": {
+    "message": "Only detect date on allowed websites",
+    "description": ""
+  },
   "excludeSites": {
-    "message": "Exclude sites:",
+    "message": "Exclude websites:",
+    "description": ""
+  },
+  "allowSites": {
+    "message": "Allow websites:",
     "description": ""
   },
   "placeholder": {
