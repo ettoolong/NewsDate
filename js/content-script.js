@@ -49,15 +49,28 @@ const monthMapping = {
   'oct': '10',
   'nov': '11',
   'dec': '12',
+  'january': '01',
+  'february': '02',
+  'march': '03',
+  'april': '04',
+  'june': '06',
+  'july': '07',
+  'august': '08',
+  'september': '09',
+  'october': '10',
+  'november': '11',
+  'december': '12',
 }
 const dateRegex = /^(\d{4}\/\d{1,2}\/\d{1,2}).*/g
-const localDateRegex = /^[A-Za-z]{3} ([A-Za-z]{3} \d{2} \d{4}) \d{2}:\d{2}:\d{2}.+/i
+const localDateRegex = /^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)?(?: |,)? ?((?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)(?: |\/|,|-)\d{1,2}(?: |\/|,|-)\d{4}).*/i
+const localDateRegex2 = /^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)?(?: |,)? ?(\d{1,2}(?: |\/|,|-)(?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)(?: |\/|,|-)\d{4}).*/i
 
 function convertFromLocalDate(dateStr) {
-  const m = localDateRegex.exec(dateStr)
+  const format = localDateRegex.test(dateStr) ? 1 : 2
+  const m = format === 1 ? localDateRegex.exec(dateStr) : localDateRegex2.exec(dateStr)
   if (m.length === 2) {
-    let tmp = (monthMapping[m[1].substr(0,3).toLowerCase()] + m[1].substr(3)).replace(/\s/g,'/')
-    tmp = moment(tmp, 'MM/DD/YYYY').format('YYYY-MM-DD')
+    const s = m[1].replace(/( |\/|,|-)/g,' ').split(' ')
+    let tmp = format === 1 ? `${s[2]}-${monthMapping[s[0]]}-${s[1].padStart(2,'0')}` : `${s[2]}-${monthMapping[s[1]]}-${s[0].padStart(2,'0')}`
     if (tmp === 'Invalid date') {
       return dateStr
     } else {
